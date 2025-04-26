@@ -7,11 +7,13 @@
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
 
-QT_CHARTS_USE_NAMESPACE
-
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+// Chọn một trong hai cách sau:
+// Cách 1: Sử dụng namespace
+QT_CHARTS_USE_NAMESPACE
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -27,9 +29,9 @@ private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
     QByteArray serialBuffer;
-    QtCharts::QLineSeries *series;
-    QtCharts::QChart *chart;
-    QtCharts::QChartView *chartView;
+    QLineSeries *series; // Đã bỏ QtCharts::
+    QChart *chart; // Đã bỏ QtCharts::
+    QChartView *chartView; // Đã bỏ QtCharts::
     int timeX = 0;
 };
 
