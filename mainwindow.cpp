@@ -8,18 +8,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    series = new QtCharts::QLineSeries();
-    chart = new QtCharts::QChart();
+    series = new QLineSeries(); // Đã bỏ QtCharts::
+    chart = new QChart(); // Đã bỏ QtCharts::
     chart->addSeries(series);
     chart->legend()->hide();
     chart->setTitle("Biểu đồ Nhiệt độ theo thời gian");
 
-    QtCharts::QValueAxis *axisX = new QtCharts::QValueAxis;
+    QValueAxis *axisX = new QValueAxis; // Đã bỏ QtCharts::
     axisX->setLabelFormat("%d");
     axisX->setTitleText("Time (s)");
     axisX->setTickCount(10);
 
-    QtCharts::QValueAxis *axisY = new QtCharts::QValueAxis;
+    QValueAxis *axisY = new QValueAxis; // Đã bỏ QtCharts::
     axisY->setLabelFormat("%.1f");
     axisY->setTitleText("Temperature (°C)");
     axisY->setRange(0, 100);
@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     chart->setAxisX(axisX, series);
     chart->setAxisY(axisY, series);
 
-    chartView = new QtCharts::QChartView(chart);
+    chartView = new QChartView(chart); // Đã bỏ QtCharts::
     chartView->setRenderHint(QPainter::Antialiasing);
 
     ui->verticalLayout->addWidget(chartView);
@@ -37,36 +37,4 @@ MainWindow::MainWindow(QWidget *parent)
     serial->open(QIODevice::ReadOnly);
 
     connect(serial, &QSerialPort::readyRead, this, &MainWindow::readSerial);
-}
-
-void MainWindow::readSerial() {
-    serialBuffer.append(serial->readAll());
-
-    if (serialBuffer.contains('\n')) {
-        QString data = QString::fromUtf8(serialBuffer).trimmed();
-        serialBuffer.clear();
-
-        QStringList parts = data.split(',');
-        if (parts.size() == 3) {
-            QString temp = parts[0].split(':')[1];
-            QString hori = parts[1].split(':')[1];
-            QString vert = parts[2].split(':')[1];
-
-            ui->labelTemp->setText("Nhiệt độ: " + temp + " °C");
-            ui->labelHori->setText("Servo ngang: " + hori + "°");
-            ui->labelVert->setText("Servo dọc: " + vert + "°");
-
-            qreal tempVal = temp.toFloat();
-            series->append(timeX++, tempVal);
-
-            if (series->count() > 50) {
-                series->remove(0);
-            }
-        }
-    }
-}
-
-MainWindow::~MainWindow() {
-    serial->close();
-    delete ui;
 }
